@@ -2,13 +2,11 @@
 function(nwstd_install_include_files SOURCE_DIR)
     install(DIRECTORY ${SOURCE_DIR}/Source/
             DESTINATION ${CMAKE_INSTALL_PREFIX}/SDK/Include
-            FILES_MATCHING PATTERN "*.h"
-            )
+            FILES_MATCHING PATTERN "*.h")
 
     if (EXISTS ${SOURCE_DIR}/3rdParty)
         install(DIRECTORY ${SOURCE_DIR}/3rdParty/
-                DESTINATION ${CMAKE_INSTALL_PREFIX}/SDK/Include
-                )
+                DESTINATION ${CMAKE_INSTALL_PREFIX}/SDK/Include)
     endif ()
 endfunction()
 
@@ -32,6 +30,8 @@ function(nwstd_target_define_common_properties NAME DIRECTORY)
     # Target Install Script
     nwstd_install_targets(${NAME})
     nwstd_install_include_files(${DIRECTORY})
+    # Set Target Name Macro
+    target_compile_definitions(${NAME} PRIVATE -DNW_COMPONENT_NAME="${NAME}")
 endfunction()
 
 function(nwstd_add_executable NAME DIRECTORY)
@@ -44,4 +44,9 @@ function(nwstd_add_library NAME TYPE DIRECTORY)
     file(GLOB_RECURSE SRC DIRECTORY ${DIRECTORY}/Source/*.*)
     add_library(${NAME} ${TYPE} ${SRC})
     nwstd_target_define_common_properties(${NAME} ${DIRECTORY})
+    # Add Shared Library Export Flag
+    if (TYPE STREQUAL "SHARED")
+        string(TOUPPER ${NAME} NAME_IN_UPPER_CASE)
+        target_compile_definitions(${NAME} PRIVATE NW_${NAME_IN_UPPER_CASE}_EXPORTS)
+    endif()
 endfunction()
