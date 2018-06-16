@@ -34,7 +34,7 @@ function(nwstd_target_define_common_properties NAME DIRECTORY)
     target_compile_definitions(${NAME} PRIVATE -DNW_COMPONENT_NAME="${NAME}")
 endfunction()
 
-function(nwstd_add_executable NAME DIRECTORY)
+function(nwstd_add_executable NAME)
     file(GLOB_RECURSE SRC DIRECTORY ${DIRECTORY}/Source/*.*)
     add_executable(${NAME} ${SRC})
     nwstd_target_define_common_properties(${NAME} ${DIRECTORY})
@@ -49,4 +49,15 @@ function(nwstd_add_library NAME TYPE DIRECTORY)
         string(TOUPPER ${NAME} NAME_IN_UPPER_CASE)
         target_compile_definitions(${NAME} PRIVATE NW_${NAME_IN_UPPER_CASE}_EXPORTS)
     endif()
+endfunction()
+
+function(nw_module NAME AUTHOR VERSION)
+    file(WRITE ${CMAKE_BINARY_DIR}/Project/Modules/${NAME}
+            "NAME=${NAME}\n"
+            "VERSION=${VERSION}\n"
+            "AUTHOR=${AUTHOR}\n")
+endfunction()
+
+function(nw_module_target MODULE NAME)
+    file(APPEND ${CMAKE_BINARY_DIR}/Project/Modules/${MODULE} "TARGET=${NAME}\n")
 endfunction()
