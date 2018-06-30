@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Clone.h"
 #include "Core/StringUtils.h"
 #include "Core/Application.h"
 
@@ -17,9 +18,9 @@ public:
     }
 
     void fetchProject() {
-        auto fetch = split(args()["fetch"].as<std::string>(), ':');
-        filesystem::path x = mRoot / "Libs";
-        invoke(std::string("cd " + x.string() + "&& git clone https://github.com/"+ fetch[0] + '/' + fetch[1]));
+        auto opt = split(args()["fetch"].as<std::string>(), ':');
+        clone(std::string("https://github.com/" + opt[0] + '/' + opt[1]).c_str(),
+              (mRoot / "Libs" / opt[1]).string().c_str());
     }
 
     void run() override {
