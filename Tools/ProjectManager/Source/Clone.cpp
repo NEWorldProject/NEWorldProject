@@ -1,4 +1,4 @@
-#include "Clone.h"
+#include "Clone.hpp"
 #include <git2.h>
 #include <git2/clone.h>
 #include <cstdio>

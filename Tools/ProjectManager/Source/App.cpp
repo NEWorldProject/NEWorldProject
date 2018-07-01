@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Clone.h"
+#include "Clone.hpp"
 #include "Core/StringUtils.h"
 #include "Core/Application.h"
 
