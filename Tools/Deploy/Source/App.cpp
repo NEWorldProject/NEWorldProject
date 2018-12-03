@@ -17,7 +17,11 @@ public:
         auto from = filesystem::absolute(mBuild / "Modules" / module);
         auto to = filesystem::absolute(mDeploy / "Modules" / module);
         std::cout << "-- Copying " << from << " Into " << to / module << std::endl;
+#ifdef NW_FS_IS_BOOST
+        filesystem::recursive_copy(from, to);
+#else
         copy(from, to, filesystem::copy_options::update_existing | filesystem::copy_options::recursive);
+#endif
     }
 
     void createDeployArchive(const std::string &module) const {

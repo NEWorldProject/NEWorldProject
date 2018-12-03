@@ -1,4 +1,4 @@
-nw_project_prepare(CoreFeatures)
+nw_project_prepare(Core)
 add_subdirectory(minizip)
 nwstd_add_executable(Deploy ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(Deploy libminizip)

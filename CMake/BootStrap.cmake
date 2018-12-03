@@ -18,12 +18,12 @@ endif ()
 
 function(target_enable_ipo NAME)
     if (NWCONF_IPO_SUPPORT)
-        set_property(TARGET ${NAME} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+        set_property(TARGET ${NAME} PROPERTY INTERPROCEDURAL_OPTIMIZATION $<$<CONFIG:Debug>:FALSE>:TRUE)
     endif ()
 endfunction()
 
 # Enable Filesystem
-if(UNIX OR MINGW)
+if((UNIX OR MINGW) AND (NOT APPLE))
     link_libraries(stdc++fs)
 endif()
 

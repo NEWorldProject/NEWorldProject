@@ -13,7 +13,7 @@ public:
     void updateProjects() {
         auto projRoot = mRoot / "Libs";
         for (auto&& x : filesystem::directory_iterator(projRoot))
-            if (x.is_directory())
+            if (filesystem::is_directory(x))
                 invoke(std::string("cd " + filesystem::absolute(x).string() + "&& git pull"));
     }
 

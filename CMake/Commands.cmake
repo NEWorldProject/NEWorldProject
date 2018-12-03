@@ -13,6 +13,20 @@ endif ()")
             "include(${CMAKE_BINARY_DIR}/Project/Scripts/Targets/${NAME}.cmake)\n")
 endfunction()
 
+function(nwstd_install_include_files_slim NAME SOURCE_DIR)
+    file(GENERATE OUTPUT ${CMAKE_BINARY_DIR}/Project/Scripts/Targets/${NAME}.cmake CONTENT
+        "file(COPY ${SOURCE_DIR}/
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/Modules/${NW_CURRENT_MODULE}/SDK-$<CONFIG>/Include
+    FILES_MATCHING PATTERN \"*.h\")
+
+if (EXISTS ${SOURCE_DIR}/3rdParty)
+    file(COPY ${SOURCE_DIR}/3rdParty/
+         DESTINATION ${CMAKE_INSTALL_PREFIX}/Modules/${NW_CURRENT_MODULE}/SDK-$<CONFIG>/Include)
+endif ()")
+    file(APPEND ${CMAKE_BINARY_DIR}/Project/Scripts/DeployHeaders.cmake
+        "include(${CMAKE_BINARY_DIR}/Project/Scripts/Targets/${NAME}.cmake)\n")
+endfunction()
+
 
 # Standard Target Utilities
 function(nwstd_target_define_common_properties NAME DIRECTORY)
@@ -50,6 +64,45 @@ function(nwstd_add_library NAME TYPE DIRECTORY)
         string(TOUPPER ${NAME} NAME_IN_UPPER_CASE)
         target_compile_definitions(${NAME} PRIVATE NW_${NAME_IN_UPPER_CASE}_EXPORTS)
     endif()
+endfunction()
+
+function(nwstd_target_define_common_properties_slim NAME DIRECTORY)
+    target_enable_ipo(${NAME})
+    # Set Target Include Directories
+    target_include_directories(${NAME} PUBLIC ${DIRECTORY})
+    # Target Install Script
+    nwstd_install_include_files(${NAME} ${DIRECTORY})
+    # Set Target Name Macro
+    target_compile_definitions(${NAME} PRIVATE -DNW_COMPONENT_NAME="${NAME}")
+    # Add Module Info
+    nw_module_target(${NW_CURRENT_MODULE} ${NAME})
+endfunction()
+
+function(nwstd_add_executable_slim NAME DIRECTORY)
+    file(GLOB_RECURSE SRC DIRECTORY ${DIRECTORY}/*.*)
+    add_executable(${NAME} ${SRC})
+    nwstd_target_define_common_properties_slim(${NAME} ${DIRECTORY})
+endfunction()
+
+function(nwstd_add_library_slim NAME TYPE DIRECTORY)
+    file(GLOB_RECURSE SRC DIRECTORY ${DIRECTORY}/*.*)
+    add_library(${NAME} ${TYPE} ${SRC})
+    nwstd_target_define_common_properties_slim(${NAME} ${DIRECTORY})
+    # Add Shared Library Export Flag
+    if (TYPE STREQUAL "SHARED")
+        string(TOUPPER ${NAME} NAME_IN_UPPER_CASE)
+        target_compile_definitions(${NAME} PRIVATE NW_${NAME_IN_UPPER_CASE}_EXPORTS)
+    endif()
+endfunction()
+
+function(nwstd_add_header_only_slim NAME DIRECTORY)
+    file(GLOB_RECURSE SRC DIRECTORY ${DIRECTORY}/*.*)
+    add_library(Math INTERFACE)
+    target_sources(Math INTERFACE ${SRC})
+    # Set Target Include Directories
+    target_include_directories(${NAME} INTERFACE ${DIRECTORY})
+    # Target Install Script
+    nwstd_install_include_files(${NAME} ${DIRECTORY})
 endfunction()
 
 function(nw_module NAME VERSION AUTHOR)

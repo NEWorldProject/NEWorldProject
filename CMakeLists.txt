@@ -6,7 +6,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 include(BootStrap)
 include(Commands)
 
-nw_module(CoreFeatures 0.0.1 INFINIDEAS)
+nw_module(Core 0.0.1 INFINIDEAS)
 
 add_subdirectory(Common)
 add_subdirectory(Libs)
