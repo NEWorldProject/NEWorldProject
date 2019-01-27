@@ -1,3 +1,12 @@
 [submodule "Common"]
 	path = Common
 	url = https://github.com/NEWorldProject/Common
+[submodule "Libs/Math"]
+	path = Libs/Math
+	url = git@github.com:NEWorldProject/Math.git
+[submodule "Libs/Presentation"]
+	path = Libs/Presentation
+	url = git@github.com:NEWorldProject/Presentation.git
+[submodule "Libs/task"]
+	path = Libs/task
+	url = git@github.com:NEWorldProject/task.git
