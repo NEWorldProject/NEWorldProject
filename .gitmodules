@@ -1,6 +1,6 @@
 [submodule "Common"]
 	path = Common
-	url = https://github.com/NEWorldProject/Common
+	url = git@github.com:NEWorldProject/Common.git
 [submodule "Libs/Math"]
 	path = Libs/Math
 	url = git@github.com:NEWorldProject/Math.git
